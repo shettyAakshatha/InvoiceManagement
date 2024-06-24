@@ -42,8 +42,13 @@ namespace InvoiceManagementTest
                 status = InvoiceManagement.Model.InvoiceStatus.Pending
 
             };
-
+            List<InvoiceDetailsDataModel> invoiceDetailsDataModels = new List<InvoiceDetailsDataModel>();
+            invoiceDetailsDataModels.Add(InvoiceDataModel);
             mock_InvoiceRepository.Setup(x => x.SaveInvoiceDetails(It.IsAny<InvoiceDetailsDataModel>())).Returns(InvoiceDataModel);
+
+            mock_InvoiceRepository.Setup(x => x.GetAllInvoices(0, 0)).Returns(invoiceDetailsDataModels);
+
+            mock_InvoiceRepository.Setup(x => x.GetInvoiceDetails(It.IsAny<int>())).Returns(InvoiceDataModel);
 
             var response = InvoiceService.SaveInvoiceDetails(new CreateInvoiceViewModel()
             {
@@ -51,15 +56,22 @@ namespace InvoiceManagementTest
                 due_date = "2024-07-24"
 
             });
-            Assert.AreEqual(InvoiceDataModel.amount, response.amount);
-            Assert.AreEqual(InvoiceDataModel.status, response.status);
+            Assert.Equals(InvoiceDataModel.amount, response.amount);
+            Assert.Equals(InvoiceDataModel.status, response.status);
 
         }
         [Test] public void SaveInvoiceDetails_OnFailure()
         {
             Setup();
-            //mock_InvoiceRepository.Setup(x => x.SaveInvoiceDetails(It.IsAny<InvoiceDetailsDataModel>())).Returns(new );
+            string errorMsg = "Error from repository layer";
+            Exception repoException = new Exception(errorMsg);
+           // mock_InvoiceRepository.Setup(x => x.SaveInvoiceDetails(It.IsAny<InvoiceDetailsDataModel>())).Returns(repoException);
 
+        }
+        [Test]
+        public void GetAllInvoiceDetails_OnSucess()
+        {
+            Setup();
         }
     }
 }

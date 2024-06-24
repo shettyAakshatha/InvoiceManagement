@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceManagement", "Invoic
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{0535A13A-7A97-4E09-BA29-8E93E92E9E06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceManagementTest", "InvoiceManagementTest\InvoiceManagementTest.csproj", "{6322FC7C-B6C6-486A-97B9-D243CEB715CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceManagementTest", "InvoiceManagementTest\InvoiceManagementTest.csproj", "{6322FC7C-B6C6-486A-97B9-D243CEB715CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

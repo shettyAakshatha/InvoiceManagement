@@ -35,5 +35,6 @@ set ASPNETCORE_ENVIRONMENT value in lauchsettings.json ( Development / Productio
 - `GET /invoices`: Retrieves a list of invoices
 - `GET /invoices/id`: Retrieves a invoices by id
 - `POST /invoices `: Creates a new invoice.
-- `POST /invoices/id/payments : update payment for the requested id
-- `POST /invoices/process-overdue : processes all the overdue invoices and creates an new invoice with due_date as 30 days from current date.
+- `POST /invoices/id/payments `: update payment for the requested id
+- `POST /invoices/process-overdue `: processes all the overdue invoices and creates an new invoice with due_date as 30 days from current date.
+

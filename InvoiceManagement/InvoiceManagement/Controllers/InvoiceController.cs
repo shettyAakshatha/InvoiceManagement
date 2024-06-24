@@ -6,6 +6,7 @@ using InvoiceManagement.Model.ResponseModel;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Net;
+using Microsoft.Extensions.Options;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,11 +21,13 @@ namespace InvoiceManagement.Controllers
         public IInvoiceService _invoiceService { get; set; }
         private IMapper _mapper { get; set; }
         private readonly ILogger<InvoiceController> _logger;
+       
         public InvoiceController(IInvoiceService invoiceService, IMapper mapper, ILogger<InvoiceController> logger)
         {
             _invoiceService = invoiceService;
             _mapper = mapper;
             _logger = logger;
+            
         }
         
         [HttpGet]
@@ -44,6 +47,7 @@ namespace InvoiceManagement.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError("Exception in ");
                 return StatusCode(500, new ProblemDetails
                 {
                     Status = (int)HttpStatusCode.InternalServerError,
@@ -80,12 +84,8 @@ namespace InvoiceManagement.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ProblemDetails
-                {
-                    Status = (int)HttpStatusCode.InternalServerError,
-                    Title = "Server error",
-                    Detail = "Server error Try again."
-                });
+
+                throw;
 
             }
 
@@ -95,6 +95,7 @@ namespace InvoiceManagement.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] CreateInvoiceViewModel _invoiceModel)
         {
+            _logger.LogInformation("Create Invoice");
             try
             {
                 InvoiceDetailsViewModel response = _invoiceService.SaveInvoiceDetails(_invoiceModel);
@@ -110,12 +111,8 @@ namespace InvoiceManagement.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ProblemDetails
-                {
-                    Status = (int)HttpStatusCode.InternalServerError,
-                    Title = "Server error",
-                    Detail = "Server error Try again."
-                });
+                throw;
+                
 
             }
 
@@ -125,6 +122,7 @@ namespace InvoiceManagement.Controllers
         [HttpPut("{id}/payments")]
         public IActionResult Put(int id, [FromBody] PaymentViewModel paymentAmount)
         {
+            _logger.LogInformation("Make Payments");
             try
             {
                 if (id <= 0)
@@ -156,21 +154,18 @@ namespace InvoiceManagement.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ProblemDetails
-                {
-                    Status = (int)HttpStatusCode.InternalServerError,
-                    Title = "Server error",
-                    Detail = "Server error Try again."
-                });
+                throw;
+
 
             }
 
         }
 
-        // 
+        
         [HttpPost("/process-overdue")]
         public IActionResult ProcessOverDue([FromBody] OverdueViewModel overdue)
         {
+            _logger.LogInformation("Process OverDue Invoices");
             try
             {
 
@@ -180,19 +175,14 @@ namespace InvoiceManagement.Controllers
                     return StatusCode(400, new ProblemDetails
                     {
                         Status = (int)HttpStatusCode.InternalServerError,
-                        Title = "Bad Request",
+                        Title = "Exception in Processing ",
                         Detail = "Can't process the overdue details."
                     });
                 }
                 return Ok();
             }
             catch (Exception ex) {
-                return StatusCode(500, new ProblemDetails
-                {
-                    Status = (int)HttpStatusCode.InternalServerError,
-                    Title = "Server error",
-                    Detail = "Server error Try again."
-                });
+                throw;
 
             }
 

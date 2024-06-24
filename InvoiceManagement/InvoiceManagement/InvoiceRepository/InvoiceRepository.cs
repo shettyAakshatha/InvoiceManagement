@@ -1,7 +1,9 @@
 ﻿
 using InvoiceManagement.Model;
 using InvoiceManagement.Model.ViewModel;
+using Microsoft.Extensions.Options;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime;
 using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -11,13 +13,14 @@ namespace InvoiceManagement.InvoiceRepository
 {
     public class InvoiceRepository : IInvoiceRepository
     {
-        public string InvoiceDataPath = "../InvoiceManagement/Data/Invoices";
-        public string MasterDataPath = "../InvoiceManagement/Data/MasterData/Master.json";
+       // public string InvoiceDataPath = "../InvoiceManagement/Data/Invoices";
+       // public string MasterDataPath = "../InvoiceManagement/Data/MasterData/Master.json";
         private readonly ILogger<InvoiceRepository> _logger;
-
-        public InvoiceRepository(ILogger<InvoiceRepository> logger)
+        private  AppSettings _appSettings;
+        public InvoiceRepository(ILogger<InvoiceRepository> logger, IOptions<AppSettings> mySettings)
         {
             _logger = logger;
+            _appSettings = mySettings.Value;
         }
 
         public InvoiceDetailsDataModel SaveInvoiceDetails(InvoiceDetailsDataModel invoiceDetailsData)
@@ -40,7 +43,7 @@ namespace InvoiceManagement.InvoiceRepository
             catch (Exception ex)
             {
                 _logger.LogError("Exception :" + ex.Message);
-                return null;
+                throw;
             }
 
 
@@ -56,16 +59,16 @@ namespace InvoiceManagement.InvoiceRepository
             catch (Exception ex)
             {
                 _logger.LogError("Exception :" + ex.Message);
-                return 0;
+                throw;
             }
         }
         public InvoiceDetailsDataModel GetInvoiceDetails(int invoiceID)
         {
             try
             {
-                if (File.Exists(InvoiceDataPath + "/" + invoiceID + ".json"))
+                if (File.Exists(_appSettings.InvoicePath + "/" + invoiceID + ".json"))
                 {
-                    string jsonData = File.ReadAllText(InvoiceDataPath + "/" + invoiceID + ".json");
+                    string jsonData = File.ReadAllText(_appSettings.InvoicePath + "/" + invoiceID + ".json");
                     return JsonSerializer.Deserialize<InvoiceDetailsDataModel>(jsonData);
 
                 }
@@ -78,7 +81,7 @@ namespace InvoiceManagement.InvoiceRepository
             catch (Exception ex)
             {
                 _logger.LogError("Exception :" + ex.Message);
-                return null;
+                throw;
             }
         }
         
@@ -88,13 +91,13 @@ namespace InvoiceManagement.InvoiceRepository
             {
                 string jsonContent = System.Text.Json.JsonSerializer.Serialize(invoiceDetailsData);
                 string fileName = invoiceDetailsData.id + ".json";
-                File.WriteAllText(InvoiceDataPath + "/" + fileName, jsonContent);
+                File.WriteAllText(_appSettings.InvoicePath + "/" + fileName, jsonContent);
                 return 1;
             }
             catch (Exception ex)
             {
                 _logger.LogError("Exception :" + ex.Message);
-                return 0;
+                throw;
             }
 
         }
@@ -103,7 +106,7 @@ namespace InvoiceManagement.InvoiceRepository
             try
             {
                 List<InvoiceDetailsDataModel> invoiceDetailsArray = new List<InvoiceDetailsDataModel>();
-                foreach (string invoice in Directory.GetFiles(InvoiceDataPath))
+                foreach (string invoice in Directory.GetFiles(_appSettings.InvoicePath))
                 {
                     InvoiceDetailsDataModel invoiceDetails = new InvoiceDetailsDataModel();
                     invoiceDetails = JsonSerializer.Deserialize<InvoiceDetailsDataModel>(File.ReadAllText(invoice));
@@ -134,14 +137,14 @@ namespace InvoiceManagement.InvoiceRepository
             catch (Exception ex)
             {
                 _logger.LogError("Exception :" + ex.Message);
-                return null;
+                throw;
             }
         }
         public int GetTopInvoiceID()
         {
             try
             {
-                string jsonData = File.ReadAllText(MasterDataPath);
+                string jsonData = File.ReadAllText(_appSettings.MasterdataPath);
 
                 var jsonObject = JsonSerializer.Deserialize<Dictionary<string, int>>(jsonData);
                 return jsonObject["invoiceId"];
@@ -149,18 +152,18 @@ namespace InvoiceManagement.InvoiceRepository
             catch (Exception ex)
             {
                 _logger.LogError("Exception :" + ex.Message);
-                return 1000;
+                throw;
             }
         }
         public int UpdateInvoiceID(int invoiceId)
         {
             try
             {
-                string jsonData = File.ReadAllText(MasterDataPath);
+                string jsonData = File.ReadAllText(_appSettings.MasterdataPath);
 
                 var jsonObject = JsonSerializer.Deserialize<Dictionary<string, int>>(jsonData);
                 jsonObject["invoiceId"] = invoiceId;
-                File.WriteAllText(MasterDataPath, System.Text.Json.JsonSerializer.Serialize(jsonObject));
+                File.WriteAllText(_appSettings.MasterdataPath, System.Text.Json.JsonSerializer.Serialize(jsonObject));
                 return 1;
             }
             catch (Exception ex)

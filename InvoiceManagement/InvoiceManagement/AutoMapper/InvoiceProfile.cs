@@ -16,7 +16,7 @@ namespace InvoiceManagement.AutoMapper
                  //.ForMember(dest => dest.amount, opt => opt.MapFrom(src => src.amount))
                  //.ForMember(dest => dest.paid_amount, opt => opt.MapFrom(src => src.paid_amount))
                 .ForMember(dest => dest.status,opt => opt.MapFrom(src =>Enum.GetName(typeof(InvoiceStatus) ,src.status)))
-                .ForMember(dest => dest.due_date, opt => opt.MapFrom(src => src.due_date.ToString("yyyy-mm-dd")));
+                .ForMember(dest => dest.due_date, opt => opt.MapFrom(src => src.due_date.ToString("yyyy-MM-dd")));
             
         }
     }

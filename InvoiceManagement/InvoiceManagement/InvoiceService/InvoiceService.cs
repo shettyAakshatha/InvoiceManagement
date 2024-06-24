@@ -47,7 +47,7 @@ namespace InvoiceManagement.InvoiceService
             catch (Exception ex)
             {  
                 _logger.LogError(" Exception:"+ ex.Message);
-                return null;
+                throw;
             }
         }
         public IEnumerable<InvoiceDetailsViewModel> GetAllInvoiceDetails(int filterStatusUnPaid = 0)
@@ -63,7 +63,7 @@ namespace InvoiceManagement.InvoiceService
             catch (Exception ex)
             {
                 _logger.LogError(" Exception:" + ex.Message);
-                return null;
+                throw;
             }
         }
 
@@ -79,7 +79,7 @@ namespace InvoiceManagement.InvoiceService
             catch (Exception ex)
             {
                 _logger.LogError(" Exception:" + ex.Message);
-                return null;
+                throw;
             }
 
         }
@@ -110,7 +110,7 @@ namespace InvoiceManagement.InvoiceService
             catch (Exception ex)
             {
                 _logger.LogError(" Exception:" + ex.Message);
-                return 0;
+                throw;
             }
         }
         public int? GetNextInvoiceId()
@@ -165,7 +165,7 @@ namespace InvoiceManagement.InvoiceService
             catch (Exception ex)
             {
                 _logger.LogError(" Exception:" + ex.Message);
-                return 0;
+                throw;
             }
         }
 

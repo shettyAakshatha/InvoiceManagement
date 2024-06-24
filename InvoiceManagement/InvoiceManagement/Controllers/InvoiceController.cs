@@ -78,7 +78,13 @@ namespace InvoiceManagement.Controllers
                 var response = _invoiceService.GetInvoiceDetails(id);
                 if (response == null)
                 {
-                    return NotFound();
+                    var problemDetails = new ProblemDetails
+                    {
+                        Status = (int)HttpStatusCode.NotFound,
+                        Title = "Id Not Found",
+                        Detail = "Invoice Id doesn't exists"
+                    };
+                    return NotFound(problemDetails);
                 }
                 return Ok(response);
             }
@@ -131,7 +137,7 @@ namespace InvoiceManagement.Controllers
                     {
                         Status = (int)HttpStatusCode.BadRequest,
                         Title = "Invalid input",
-                        Detail = "Id must be greater than or equal to 0"
+                        Detail = "Id must be greater than 0"
                     };
                     return BadRequest(problemDetails);
                 }
@@ -141,15 +147,27 @@ namespace InvoiceManagement.Controllers
                     return NoContent();
 
                 }
+                else if (respone == 2)
+                {
+                    var problemDetails = new ProblemDetails
+                    {
+                        Status = (int)HttpStatusCode.NotFound,
+                        Title = "Id Not Found",
+                        Detail = "Invoice Id doesn't exists"
+                    };
+                    return NotFound(problemDetails);
+                }
                 else
                 {
                     var problemDetails = new ProblemDetails
                     {
-                        Status = (int)HttpStatusCode.BadRequest,
-                        Title = "Invalid input",
-                        Detail = "Payment Faied Try again"
+                        Status = (int)HttpStatusCode.InternalServerError,
+                        Title = "Server Error",
+                        Detail = "Error while Processing"
                     };
-                    return BadRequest(problemDetails);
+                    return StatusCode(500, problemDetails);
+
+
                 }
             }
             catch (Exception ex)
@@ -168,18 +186,32 @@ namespace InvoiceManagement.Controllers
             _logger.LogInformation("Process OverDue Invoices");
             try
             {
-
-                int re = _invoiceService.ProcessOverDue(overdue.late_fee, overdue.overdue_days);
-                if (re == 0)
+                if (overdue.late_fee >= 0 && overdue.overdue_days > 0)
                 {
-                    return StatusCode(400, new ProblemDetails
+
+
+                    int re = _invoiceService.ProcessOverDue(overdue.late_fee, overdue.overdue_days);
+                    if (re == 0)
                     {
-                        Status = (int)HttpStatusCode.InternalServerError,
-                        Title = "Exception in Processing ",
-                        Detail = "Can't process the overdue details."
-                    });
+                        return StatusCode(500, new ProblemDetails
+                        {
+                            Status = (int)HttpStatusCode.InternalServerError,
+                            Title = "Exception in Processing ",
+                            Detail = "Can't process the overdue details."
+                        });
+                    }
+                    return NoContent();
                 }
-                return Ok();
+                else
+                {
+                    var problemDetails = new ProblemDetails
+                    {
+                        Status = (int)HttpStatusCode.BadRequest,
+                        Title = "Bad request",
+                        Detail = "Invalid request details"
+                    };
+                    return BadRequest(problemDetails);
+                }
             }
             catch (Exception ex) {
                 throw;

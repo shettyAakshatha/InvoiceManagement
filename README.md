@@ -27,4 +27,9 @@ set ASPNETCORE_ENVIRONMENT value in lauchsettings.json ( Development / Productio
 5. Build and run the API:
   dotnet build [solutionName] (dotnet build InvoiceManagement.sln)
   dotnet run [solutionName] 
+6. ## API Usage
 
+### Endpoints
+
+- `GET /invoices`: Retrieves a list of invoices
+- `POST /invoices `: Creates a new invoice.

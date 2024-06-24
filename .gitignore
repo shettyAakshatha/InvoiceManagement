@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/InvoiceManagement/.vs/InvoiceManagement
+/InvoiceManagement/.vs/*
+/InvoiceManagement/InvoiceManagement/bin/*
+/InvoiceManagement/InvoiceManagement/obj/*
+/InvoiceManagement/InvoiceManagement/Data/Invoices
+/InvoiceManagement/InvoiceManagementTest/bin/*
+/InvoiceManagement/InvoiceManagementTest/obj/*
+/InvoiceManagement/obj/*
+/InvoiceManagement/bin/*

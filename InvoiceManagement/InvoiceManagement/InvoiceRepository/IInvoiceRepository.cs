@@ -4,9 +4,10 @@ namespace InvoiceManagement.InvoiceRepository
 {
     public interface IInvoiceRepository
     {
-        public int SaveInvoiceDetails(InvoiceDetailsDataModel invoiceDetailsData);
-        public int UpdatePayments(int invoiceID, float amountPaid);
-        public  IEnumerable<InvoiceDetailsDataModel> GetAllInvoices();
-        public int GetMasterData();
+        public InvoiceDetailsDataModel SaveInvoiceDetails(InvoiceDetailsDataModel invoiceDetailsData);
+        public int UpdatePayments(InvoiceDetailsDataModel detailsDataModel);
+        public  IEnumerable<InvoiceDetailsDataModel> GetAllInvoices(int filterStatusUnPaid = 0,int filterOverdue = 0);
+        public int GetTopInvoiceID();
+        public InvoiceDetailsDataModel GetInvoiceDetails(int invoiceID);
     }
 }

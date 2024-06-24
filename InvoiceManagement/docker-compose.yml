@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  invoicemanagement:
+    image: ${DOCKER_REGISTRY-}invoicemanagement
+    build:
+      context: .
+      dockerfile: InvoiceManagement\Dockerfile
+     ports:
+     -  "8080:8080"

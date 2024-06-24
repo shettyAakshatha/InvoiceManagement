@@ -6,7 +6,7 @@ namespace InvoiceManagement.Model
     {
         [Display(Name ="pending")]
         Pending,
-        [Display(Name = "Paid")]
+        [Display(Name = "paid")]
         Paid,
         [Display(Name = "void")]
         Void
